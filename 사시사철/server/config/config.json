@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "root",
+    "password": "skawnstjq27!",
+    "database": "sasi4db",
+    "port": 3305,
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "skawnstjq27!",
+    "database": "sasi4db",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "port": 3305
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
