@@ -27,8 +27,13 @@ class weatherService {
     constructor() {
     }
 
-    fnMakeBaseDate() {
-        let baseDate = moment().format('YYYYMMDD');
+    fnMakeBaseDate(seekTime) {
+        let baseDate;
+        if(seekTime >= '2300') {
+            baseDate = moment().add("-1","d").format('YYYYMMDD');
+        } else {
+            baseDate = moment().format('YYYYMMDD');
+        } 
         return baseDate;
     }
     fnMakeBaseTime() {
@@ -37,7 +42,7 @@ class weatherService {
     }
 
     fnMakeSeekTime() {
-        let baseTime = moment().add("-1", "h").format('HH00'); // 현재기준 1시간 전 시간호출
+        let baseTime = moment().add("-1", "h").format('HH30'); // 현재기준 1시간 전 시간호출
         return baseTime;
     }
 
@@ -111,23 +116,25 @@ class weatherService {
     //호출실패시 재호출 기능 추가
     async fnCallKmc(serviceKey, baseDate, baseTime, seekTime) {
         return new Promise(function(resolve, reject) {
-            let allUrl = KAD_URL+"?serviceKey="+serviceKey+"&numOfRows=60&pageNo=1"+"&base_date="+baseDate+"&base_time="+seekTime+"&nx=88"+"&ny=90"+"&dataType=json";
-            
+            let allUrl = KAD_URL+"?serviceKey="+serviceKey+"&pageNo=1&numOfRows=60"+"&dataType=json"+"&base_date="+baseDate+"&base_time="+seekTime+"&nx=88"+"&ny=90";
+            let errRes;
             request(allUrl, (err, res, body) => {
                 if(err) { 
+                    errRes = JSON.parse(body);
                     console.log(err);
-                    reject(err)
+                    reject(errRes)
                 } else {
                     try {
                             let apiData = JSON.parse(body);
                             let resCode = apiData.response.header.resultCode;
-                            let resBody = apiData.response.body.items;
-                            let sky = null;
-                            let temperature = null;
-                            let humidity = null;
-                            let pty = null;
-
+                            
                             if( resCode === kadResOK ) {
+                                let resBody = apiData.response.body.items;
+                                let sky = null;
+                                let temperature = null;
+                                let humidity = null;
+                                let pty = null;
+
                                 for(let i = 0 ; i < resBody.item.length ; i++) {
                                     if (sky !== null && temperature !== null && humidity !== null)
                                         break;
@@ -160,7 +167,7 @@ class weatherService {
                                     pty
                                 });
                             } else {
-                                reject()
+                                reject("기상청 api 오류발생:"+`${errRes.response.header.resultMsg}\n`)
                             }
                         } catch(execept) {
                             reject(execept);    
@@ -317,9 +324,9 @@ class weatherService {
     } 
     async main(userData, res) { //userData => {성별정보, 요청방식}
         try {
-            let baseDate =  this.fnMakeBaseDate(); //기준날짜
+            let seekTime =  "2300"; //탐색시간
+            let baseDate =  this.fnMakeBaseDate(seekTime); //기준날짜
             let baseTime =  this.fnMakeBaseTime(); //기준시간
-            let seekTime =  this.fnMakeSeekTime();
             let weatherData;
             if(userData.reqCode === 'T' ){
                 weatherData = this.fnCallLocal(userData.weatherCode);
