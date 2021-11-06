@@ -1,6 +1,6 @@
 'use strict'
 const { Op } = require('sequelize');
-const KAD_URL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst';
+const KAD_URL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst';
 const serviceKey = 'bvv7pm5QuY3jE0aW7O9iteO5KDDKw2tRXReLN5ZZqneGrMFJhH7j37sgs3QV0UMKyvKnCoGLyf%2BVsRYBInLVeQ%3D%3D';
 const request = require('request');
 const moment = require('moment');
@@ -149,7 +149,7 @@ class weatherService {
                                 if(pty>ptyCode.clear && pty!=pty.rain) {
                                     pty = ptyCode.rain;
                                 }
-                                if(sky>sky.sunny && sky!=sky.sCloud) {
+                                if(sky>skyCode.sunny && sky!=skyCode.sCloud) {
                                     sky = skyCode.sCloud;
                                 }
 
@@ -333,7 +333,7 @@ class weatherService {
             console.log(error);
             res.send({
                 resCode: ectErr,
-                resMsg: "에러발생" + `${error}`
+                resMsg: "기상청 데이터 호출실패" + `${error}`
             });
         }
     }
