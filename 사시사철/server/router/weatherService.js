@@ -340,7 +340,7 @@ class weatherService {
             console.log(error);
             res.send({
                 resCode: ectErr,
-                resMsg: "기상청 데이터 호출실패" + `${error}`
+                resMsg: "기상청 데이터 호출실패:" + `${error}\n`
             });
         }
     }
