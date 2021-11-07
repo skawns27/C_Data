@@ -4,6 +4,8 @@ const KAD_URL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUlt
 const serviceKey = 'bvv7pm5QuY3jE0aW7O9iteO5KDDKw2tRXReLN5ZZqneGrMFJhH7j37sgs3QV0UMKyvKnCoGLyf%2BVsRYBInLVeQ%3D%3D';
 const request = require('request');
 const moment = require('moment');
+require('moment-timezone'); 
+moment.tz.setDefault("Asia/Seoul"); 
  //(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4), 구름조금(2) 
         //(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
 const { clothtb, colortb, foodtb, itemtb, seasontb, weathertb } = require('../models');
@@ -141,7 +143,7 @@ class weatherService {
                                     let seekFcstTime = resBody.item[i].fcstTime;
                                     if (seekFcstTime === undefined)
                                         break;
-                                    if(seekFcstTime === baseTime) {
+                                    if(seekFcstTime === baseTime || seekFcstTime === seekTime ) {
                                         switch(resBody.item[i].category) {
                                             case 'SKY': sky = resBody.item[i].fcstValue; // 하늘상태
                                             break;
@@ -324,7 +326,7 @@ class weatherService {
     } 
     async main(userData, res) { //userData => {성별정보, 요청방식}
         try {
-            let seekTime =  "2300"; //탐색시간
+            let seekTime =  this.fnMakeSeekTime(); //탐색시간
             let baseDate =  this.fnMakeBaseDate(seekTime); //기준날짜
             let baseTime =  this.fnMakeBaseTime(); //기준시간
             let weatherData;
