@@ -1,13 +1,16 @@
 'use strict'
 const { Op } = require('sequelize');
+const dotenv = require("dotenv").config({ path: __dirname + "/../.env" });
 const KAD_URL = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst';
-const serviceKey = 'bvv7pm5QuY3jE0aW7O9iteO5KDDKw2tRXReLN5ZZqneGrMFJhH7j37sgs3QV0UMKyvKnCoGLyf%2BVsRYBInLVeQ%3D%3D';
 const request = require('request');
 const moment = require('moment');
 require('moment-timezone'); 
+
 moment.tz.setDefault("Asia/Seoul"); 
- //(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4), 구름조금(2) 
-        //(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
+
+//(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4), 구름조금(2) 
+//(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
+const serviceKey = process.env.SERVICE_KEY;
 const { clothtb, colortb, foodtb, itemtb, seasontb, weathertb } = require('../models');
 const skyCode = {
     sunny: 1,

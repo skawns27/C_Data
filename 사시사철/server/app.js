@@ -6,11 +6,11 @@ const session = require('express-session');
 const { sequelize } = require('./models');
 const dotenv = require('dotenv');
 const weatherService = require('./router');
-
+const cors = require('cors');
 const app = express();
 dotenv.config();
 app.set('port', process.env.PORT || 3000);
-
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded( {extended: false }));
